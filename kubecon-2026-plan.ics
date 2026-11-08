@@ -1,0 +1,483 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//KubeCon NA 2026 plan//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:KubeCon NA 2026 (MST)
+X-WR-TIMEZONE:America/Denver
+BEGIN:VTIMEZONE
+TZID:America/Denver
+BEGIN:STANDARD
+DTSTART:19701101T020000
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+TZOFFSETFROM:-0600
+TZOFFSETTO:-0700
+TZNAME:MST
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:19700308T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU
+TZOFFSETFROM:-0700
+TZOFFSETTO:-0600
+TZNAME:MDT
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:kubecon26-badge@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261109T070000
+DTEND;TZID=America/Denver:20261109T080000
+SUMMARY:Badge pickup (Registration)
+LOCATION:Salt Palace\, 200 South Entrance (South)
+DESCRIPTION:Registration is open 7:00 AM to 5:00 PM on Monday. Go early to 
+ beat the queue. Your talk check-in is at 11:51.\nDetails: https://events.l
+ inuxfoundation.org/kubecon-cloudnativecon-north-america/program/schedule/?
+ id=1289947
+CATEGORIES:Other
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Badge pickup (Registration)
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-fluxcon@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261109T090000
+DTEND;TZID=America/Denver:20261109T111500
+SUMMARY:FluxCon (first part only)
+LOCATION:Salt Palace\, Level 1\, Grand Ballroom H
+DESCRIPTION:The half-day event runs to 12:25 and needs your All Access pass
+ . Leave by 11:15. The Hyatt is connected to the Salt Palace\, so you are i
+ n your talk room by about 11:20\, over 30 minutes before your 11:51 check-
+ in.\nDetails: https://events.linuxfoundation.org/kubecon-cloudnativecon-no
+ rth-america/program/schedule/?id=1289762
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:FluxCon (first part only)
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1289875@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261109T113100
+DTEND;TZID=America/Denver:20261109T113600
+SUMMARY:LitmusChaos 2026: What’s New & What’s Next
+LOCATION:Hyatt Regency\, Level 4\, Regency Ballroom B-D
+DESCRIPTION:Chaos testing for failover. Same room as your talk.\nDetails: h
+ ttps://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/pro
+ gram/schedule/?id=1289875
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:LitmusChaos 2026: What’s New & What’s Next
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1289881@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261109T115900
+DTEND;TZID=America/Denver:20261109T120400
+SUMMARY:k8gb Is Growing up: Incubating Global Load Balancing for Kubernetes
+LOCATION:Hyatt Regency\, Level 4\, Regency Ballroom B-D
+DESCRIPTION:Cross-cluster traffic failover\, right before your talk.\nDetai
+ ls: https://events.linuxfoundation.org/kubecon-cloudnativecon-north-americ
+ a/program/schedule/?id=1289881
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:k8gb Is Growing up: Incubating Global Load Balancing for Kubern
+ etes
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-talk@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261109T120600
+DTEND;TZID=America/Denver:20261109T121100
+SUMMARY:[My talk] My lightning talk: Hub → Managed Cluster: How Long Did 
+ the Workload Take? Did It Arrive?
+LOCATION:Hyatt Regency\, Level 4\, Regency Ballroom B-D
+DESCRIPTION:Be in the room by 11:51. Check in at the Speaker Check-In desk 
+ at the back.\nDetails: https://events.linuxfoundation.org/kubecon-cloudnat
+ ivecon-north-america/program/schedule/?id=1289883
+CATEGORIES:My talk
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:My lightning talk: Hub → Managed Cluster: How Long Did the Wo
+ rkload Take? Did It Arrive?
+TRIGGER:-PT30M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1289885@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261109T121300
+DTEND;TZID=America/Denver:20261109T121800
+SUMMARY:Multi-Cluster Orchestration System: Karmada Updates and Use Cases
+LOCATION:Hyatt Regency\, Level 4\, Regency Ballroom B-D
+DESCRIPTION:Placement and failover\, two minutes after your talk. Stay in t
+ he room.\nDetails: https://events.linuxfoundation.org/kubecon-cloudnativec
+ on-north-america/program/schedule/?id=1289885
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Multi-Cluster Orchestration System: Karmada Updates and Use Cas
+ es
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1289909@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261109T152400
+DTEND;TZID=America/Denver:20261109T152900
+SUMMARY:Longhorn: The 2026 Wrap-up Edition
+LOCATION:Hyatt Regency\, Level 4\, Regency Ballroom B-D
+DESCRIPTION:Storage replication.\nDetails: https://events.linuxfoundation.o
+ rg/kubecon-cloudnativecon-north-america/program/schedule/?id=1289909
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Longhorn: The 2026 Wrap-up Edition
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1289913@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261109T154500
+DTEND;TZID=America/Denver:20261109T155000
+SUMMARY:Velero: Faster Backups\, Consistent Snapshots\, Incremental Everyth
+ ing
+LOCATION:Hyatt Regency\, Level 4\, Regency Ballroom B-D
+DESCRIPTION:Backup and restore.\nDetails: https://events.linuxfoundation.or
+ g/kubecon-cloudnativecon-north-america/program/schedule/?id=1289913
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Velero: Faster Backups\, Consistent Snapshots\, Incremental Eve
+ rything
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1334788@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261110T121700
+DTEND;TZID=America/Denver:20261110T122900
+SUMMARY:Cluster API in 15 Minutes. A Primer on Declarative Kubernetes Infra
+ structure
+LOCATION:Salt Palace\, Level 1\, Solutions Showcase\, Halls 5\, Cosmic Cany
+ on Zone
+DESCRIPTION:Cluster lifecycle as an API\, in the Showcase hall next to the 
+ kiosks.\nDetails: https://events.linuxfoundation.org/kubecon-cloudnativeco
+ n-north-america/program/schedule/?id=1334788
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Cluster API in 15 Minutes. A Primer on Declarative Kubernetes I
+ nfrastructure
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1223002@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261110T145000
+DTEND;TZID=America/Denver:20261110T152000
+SUMMARY:You Don’t Have to Choose: Argo and Flux Are Friends!
+LOCATION:Salt Palace\, Level 2\, 255 BC
+DESCRIPTION:GitOps at fleet scale.\nDetails: https://events.linuxfoundation
+ .org/kubecon-cloudnativecon-north-america/program/schedule/?id=1223002
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:You Don’t Have to Choose: Argo and Flux Are Friends!
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1247848@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261110T154000
+DTEND;TZID=America/Denver:20261110T161000
+SUMMARY:N Clusters\, One kubectl: Multi-Cluster That Just Works
+LOCATION:Hyatt Regency\, Level 2\, Salt Lake Ballroom C
+DESCRIPTION:Meet the speakers. A kubectl proxy over a hub-managed fleet. As
+ k what ports to OCM.\nDetails: https://events.linuxfoundation.org/kubecon-
+ cloudnativecon-north-america/program/schedule/?id=1247848
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:N Clusters\, One kubectl: Multi-Cluster That Just Works
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1243723@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261110T164000
+DTEND;TZID=America/Denver:20261110T171000
+SUMMARY:Multicluster AMA: The Community Answers
+LOCATION:Hyatt Regency\, Level 2\, Salt Lake Ballroom C
+DESCRIPTION:AMA with August Simonelli (OCM) and Laura Lorenz (SIG-Multiclus
+ ter).\nDetails: https://events.linuxfoundation.org/kubecon-cloudnativecon-
+ north-america/program/schedule/?id=1243723
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Multicluster AMA: The Community Answers
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1250559@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261110T173000
+DTEND;TZID=America/Denver:20261110T180000
+SUMMARY:GitOps Meltdown: How a Commit Triggered a Cascading Delete of 39 Cl
+ usters in Production
+LOCATION:Salt Palace\, Level 2\, 255 BC
+DESCRIPTION:Blast radius of a GitOps prune across 39 clusters.\nDetails: ht
+ tps://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/prog
+ ram/schedule/?id=1250559
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:GitOps Meltdown: How a Commit Triggered a Cascading Delete of 3
+ 9 Clusters in Production
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1360829@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261111T101100
+DTEND;TZID=America/Denver:20261111T101600
+SUMMARY:We Have GitOps at Home: How Meta Went from Terraform on Cron to Git
+ Ops for AI Infra
+LOCATION:Salt Palace\, Level 1\, Hall DE
+DESCRIPTION:Fleet GitOps in 5 minutes\, same area as the 11:50 session.\nDe
+ tails: https://events.linuxfoundation.org/kubecon-cloudnativecon-north-ame
+ rica/program/schedule/?id=1360829
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:We Have GitOps at Home: How Meta Went from Terraform on Cron to
+  GitOps for AI Infra
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1247840@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261111T115000
+DTEND;TZID=America/Denver:20261111T122000
+SUMMARY:Ship Faster\, Ship Safer: A K8s-Native Canary Pipeline for Critical
+  Cluster Services
+LOCATION:Salt Palace\, Level 1\, Grand Ballroom BDF
+DESCRIPTION:Safe rollout across clusters.\nDetails: https://events.linuxfou
+ ndation.org/kubecon-cloudnativecon-north-america/program/schedule/?id=1247
+ 840
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Ship Faster\, Ship Safer: A K8s-Native Canary Pipeline for Crit
+ ical Cluster Services
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1247641@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261111T145500
+DTEND;TZID=America/Denver:20261111T150000
+SUMMARY:5\,000 Nodes in Minutes\, Twice in a Week: A Pattern for Fleet-Wide
+  Node Changes
+LOCATION:Hyatt Regency\, Level 4\, Regency Ballroom CD
+DESCRIPTION:Fixing 5\,000+ nodes in minutes (5 min)\, in the Hyatt. Leave b
+ y 3:05 to reach the kiosk by 3:20.\nDetails: https://events.linuxfoundatio
+ n.org/kubecon-cloudnativecon-north-america/program/schedule/?id=1247641
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:5\,000 Nodes in Minutes\, Twice in a Week: A Pattern for Fleet-
+ Wide Node Changes
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-kiosk-vela-wed@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261111T153000
+DTEND;TZID=America/Denver:20261111T170000
+SUMMARY:[Booth] KubeVela kiosk shift
+LOCATION:Kiosk P-3A\, Salt Palace\, Level 1\, Solutions Showcase\, Hall 5
+DESCRIPTION:Arrive by 3:20 PM\, 10 minutes early. The 1:25 to 1:55 PM trans
+ ition is for the earlier shift.\nDetails: https://events.linuxfoundation.o
+ rg/kubecon-cloudnativecon-north-america/program/schedule/?id=1373667
+CATEGORIES:Booth shift
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:KubeVela kiosk shift
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1293929@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261112T093900
+DTEND;TZID=America/Denver:20261112T094400
+SUMMARY:Standardized Yet Adaptable: How Nutanix is Evolving Cluster API wit
+ h CAREN
+LOCATION:Salt Palace\, Level 1\, Hall DE
+DESCRIPTION:Cluster API in 5 minutes\, just before your OCM kiosk.\nDetails
+ : https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/
+ program/schedule/?id=1293929
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Standardized Yet Adaptable: How Nutanix is Evolving Cluster API
+  with CAREN
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-kiosk-ocm@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261112T101500
+DTEND;TZID=America/Denver:20261112T115500
+SUMMARY:[Booth] OCM kiosk shift
+LOCATION:Project Pavilion\, Salt Palace\, Level 1\, Solutions Showcase\, Ha
+ ll 5
+DESCRIPTION:One-time Thursday morning slot offered by the CNCF events team.
+ \nDetails: https://events.linuxfoundation.org/kubecon-cloudnativecon-north
+ -america/program/schedule/?id=1373668
+CATEGORIES:Booth shift
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:OCM kiosk shift
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-kiosk-vela-thu@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261112T122500
+DTEND;TZID=America/Denver:20261112T140000
+SUMMARY:[Booth] KubeVela kiosk shift
+LOCATION:Kiosk P-3A\, Salt Palace\, Level 1\, Solutions Showcase\, Hall 5
+DESCRIPTION:Arrive by 12:15 PM. The OCM kiosk next to it ends at 11:55 in t
+ he same hall.\nDetails: https://events.linuxfoundation.org/kubecon-cloudna
+ tivecon-north-america/program/schedule/?id=1373669\nCONFIRM this one befor
+ e relying on it.
+CATEGORIES:Booth shift
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:KubeVela kiosk shift
+TRIGGER:-PT20M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1289726@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261112T144000
+DTEND;TZID=America/Denver:20261112T151000
+SUMMARY:Kubernetes Data Protection WG Intro & Deep Dive
+LOCATION:Salt Palace\, Level 2\, 250 A-C
+DESCRIPTION:DR and backup standards. After your KubeVela shift.\nDetails: h
+ ttps://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/pro
+ gram/schedule/?id=1289726
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Kubernetes Data Protection WG Intro & Deep Dive
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-1289722@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261112T153000
+DTEND;TZID=America/Denver:20261112T160000
+SUMMARY:Longhorn: Intro\, Deep Dive and Q&A
+LOCATION:Salt Palace\, Level 2\, 250 D-F
+DESCRIPTION:Storage replication deep dive.\nDetails: https://events.linuxfo
+ undation.org/kubecon-cloudnativecon-north-america/program/schedule/?id=128
+ 9722
+CATEGORIES:Session
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Longhorn: Intro\, Deep Dive and Q&A
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-leave-mon@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261109T063000
+DTEND;TZID=America/Denver:20261109T064500
+SUMMARY:Leave the hotel
+LOCATION:Your hotel
+DESCRIPTION:Leave to be at "Badge pickup (Registration)" 5 min before 7:00 
+ AM\, with 25 min to get there. Travel times are estimates.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Leave the hotel
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-leave-tue@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261110T114700
+DTEND;TZID=America/Denver:20261110T120200
+SUMMARY:Leave the hotel
+LOCATION:Your hotel
+DESCRIPTION:Leave to be at "Cluster API in 15 Minutes. A Primer on Declarat
+ ive Kubern…" 5 min before 12:17 PM\, with 25 min to get there. Travel ti
+ mes are estimates.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Leave the hotel
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-leave-wed@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261111T094100
+DTEND;TZID=America/Denver:20261111T095600
+SUMMARY:Leave the hotel
+LOCATION:Your hotel
+DESCRIPTION:Leave to be at "We Have GitOps at Home: How Meta Went from Terr
+ aform on C…" 5 min before 10:11 AM\, with 25 min to get there. Travel ti
+ mes are estimates.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Leave the hotel
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:kubecon26-leave-thu@plan.local
+DTSTAMP:20261107T000000Z
+DTSTART;TZID=America/Denver:20261112T090900
+DTEND;TZID=America/Denver:20261112T092400
+SUMMARY:Leave the hotel
+LOCATION:Your hotel
+DESCRIPTION:Leave to be at "Standardized Yet Adaptable: How Nutanix is Evol
+ ving Clust…" 5 min before 9:39 AM\, with 25 min to get there. Travel tim
+ es are estimates.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Leave the hotel
+TRIGGER:-PT10M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

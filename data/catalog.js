@@ -1,0 +1,335 @@
+const C=[
+{
+"id": "1289834",
+"day": "mon",
+"start": "10:15",
+"end": "10:20",
+"title": "Cloud Native MySQL",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Stateful database DR background.",
+"track": "DR",
+"pick": false
+},
+{
+"id": "1289875",
+"day": "mon",
+"start": "11:31",
+"end": "11:36",
+"title": "LitmusChaos 2026: What’s New & What’s Next",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Chaos testing for failover. Same room as your talk.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1289881",
+"day": "mon",
+"start": "11:59",
+"end": "12:04",
+"title": "k8gb Is Growing up: Incubating Global Load Balancing for Kubernetes",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Cross-cluster traffic failover, right before your talk.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1289885",
+"day": "mon",
+"start": "12:13",
+"end": "12:18",
+"title": "Multi-Cluster Orchestration System: Karmada Updates and Use Cases",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Placement and failover, two minutes after your talk. Stay in the room.",
+"track": "Multicluster",
+"pick": true
+},
+{
+"id": "1289909",
+"day": "mon",
+"start": "15:24",
+"end": "15:29",
+"title": "Longhorn: The 2026 Wrap-up Edition",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Storage replication.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1289913",
+"day": "mon",
+"start": "15:45",
+"end": "15:50",
+"title": "Velero: Faster Backups, Consistent Snapshots, Incremental Everything",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Backup and restore.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1250350",
+"day": "tue",
+"start": "11:30",
+"end": "12:00",
+"title": "Saturated by Design – Maximizing Cluster Allocation in On-Premises Kubernetes",
+"loc": "Salt Palace, Level 1, Grand Ballroom ACE",
+"why": "Cluster allocation and utilization.",
+"track": "Fleet scale",
+"pick": false
+},
+{
+"id": "1334788",
+"day": "tue",
+"start": "12:17",
+"end": "12:29",
+"title": "Cluster API in 15 Minutes. A Primer on Declarative Kubernetes Infrastructure",
+"loc": "Salt Palace, Level 1, Solutions Showcase, Halls 5, Cosmic Canyon Zone",
+"why": "Cluster lifecycle as an API, in the Showcase hall next to the kiosks.",
+"track": "Fleet scale",
+"pick": true
+},
+{
+"id": "1223002",
+"day": "tue",
+"start": "14:50",
+"end": "15:20",
+"title": "You Don’t Have to Choose: Argo and Flux Are Friends!",
+"loc": "Salt Palace, Level 2, 255 BC",
+"why": "GitOps at fleet scale.",
+"track": "GitOps",
+"pick": true
+},
+{
+"id": "1247848",
+"day": "tue",
+"start": "15:40",
+"end": "16:10",
+"title": "N Clusters, One kubectl: Multi-Cluster That Just Works",
+"loc": "Hyatt Regency, Level 2, Salt Lake Ballroom C",
+"why": "Meet the speakers. A kubectl proxy over a hub-managed fleet. Ask what ports to OCM.",
+"track": "Multicluster",
+"pick": true
+},
+{
+"id": "1243723",
+"day": "tue",
+"start": "16:40",
+"end": "17:10",
+"title": "Multicluster AMA: The Community Answers",
+"loc": "Hyatt Regency, Level 2, Salt Lake Ballroom C",
+"why": "AMA with August Simonelli (OCM) and Laura Lorenz (SIG-Multicluster).",
+"track": "Multicluster",
+"pick": true
+},
+{
+"id": "1250559",
+"day": "tue",
+"start": "17:30",
+"end": "18:00",
+"title": "GitOps Meltdown: How a Commit Triggered a Cascading Delete of 39 Clusters in Production",
+"loc": "Salt Palace, Level 2, 255 BC",
+"why": "Blast radius of a GitOps prune across 39 clusters.",
+"track": "Fleet scale",
+"pick": true
+},
+{
+"id": "1289629",
+"day": "tue",
+"start": "17:30",
+"end": "18:00",
+"title": "TAG Operational Resilience: Shaping the Future Through Initiatives",
+"loc": "Salt Palace, Level 2, 254",
+"why": "DR community contacts. Overlaps GitOps Meltdown.",
+"track": "DR",
+"pick": false
+},
+{
+"id": "1360829",
+"day": "wed",
+"start": "10:11",
+"end": "10:16",
+"title": "We Have GitOps at Home: How Meta Went from Terraform on Cron to GitOps for AI Infra",
+"loc": "Salt Palace, Level 1, Hall DE",
+"why": "Fleet GitOps in 5 minutes, same area as the 11:50 session.",
+"track": "GitOps",
+"pick": true
+},
+{
+"id": "1247840",
+"day": "wed",
+"start": "11:50",
+"end": "12:20",
+"title": "Ship Faster, Ship Safer: A K8s-Native Canary Pipeline for Critical Cluster Services",
+"loc": "Salt Palace, Level 1, Grand Ballroom BDF",
+"why": "Safe rollout across clusters.",
+"track": "Fleet scale",
+"pick": true
+},
+{
+"id": "1289700",
+"day": "wed",
+"start": "11:50",
+"end": "12:20",
+"title": "From Cloud Outages to AI Security Challenges: Building Resilient DNS Infrastructure at Scale",
+"loc": "Salt Palace, Level 2, 250 A-C",
+"why": "Outage resilience. Overlaps Ship Faster.",
+"track": "DR",
+"pick": false
+},
+{
+"id": "1247641",
+"day": "wed",
+"start": "14:55",
+"end": "15:00",
+"title": "5,000 Nodes in Minutes, Twice in a Week: A Pattern for Fleet-Wide Node Changes",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom CD",
+"why": "Fixing 5,000+ nodes in minutes (5 min), in the Hyatt. Leave by 3:05 to reach the kiosk by 3:20.",
+"track": "Fleet scale",
+"pick": true
+},
+{
+"id": "1229970",
+"day": "wed",
+"start": "15:10",
+"end": "15:40",
+"title": "No RAG, No Regrets: Letting an LLM Drive 30 EKS Clusters in Production",
+"loc": "Salt Palace, Level 1, Grand Ballroom GI",
+"why": "An LLM driving 30 EKS clusters. Overlaps your kiosk arrival.",
+"track": "Fleet scale",
+"pick": false
+},
+{
+"id": "1249894",
+"day": "wed",
+"start": "15:10",
+"end": "15:40",
+"title": "Many Clusters, One GPU Pool: Locality-Aware Scheduling and Data Delivery With Kueue and Dragonfly",
+"loc": "Salt Palace, Level 1, Grand Ballroom BDF",
+"why": "Placement across clusters for one GPU pool. Overlaps your kiosk shift.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1336101",
+"day": "wed",
+"start": "15:55",
+"end": "16:10",
+"title": "Breaking the O(n²) Wall: Pub/Sub Federation for Istio Multicluster Service Discovery",
+"loc": "Salt Palace, Level 1, Solutions Showcase, Halls 5, Cosmic Canyon Zone",
+"why": "Istio multicluster discovery. Overlaps your kiosk shift.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1289702",
+"day": "wed",
+"start": "16:10",
+"end": "16:40",
+"title": "Multi-Cluster Orchestration System: Karmada Updates and Use Cases",
+"loc": "Salt Palace, Level 2, 251 A-C",
+"why": "Karmada, full session. Overlaps your kiosk shift.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1362689",
+"day": "wed",
+"start": "16:25",
+"end": "16:45",
+"title": "Demo Theater: Day 2 for Stateful Kubernetes: Data Services You Can See",
+"loc": "Salt Palace, Level 1, Solutions Showcase, Hall 1, Alpine Overlook Zone, Demo Theater",
+"why": "Day 2 stateful data services demo. Overlaps your kiosk shift.",
+"track": "DR",
+"pick": false
+},
+{
+"id": "1293929",
+"day": "thu",
+"start": "09:39",
+"end": "09:44",
+"title": "Standardized Yet Adaptable: How Nutanix is Evolving Cluster API with CAREN",
+"loc": "Salt Palace, Level 1, Hall DE",
+"why": "Cluster API in 5 minutes, just before your OCM kiosk.",
+"track": "Fleet scale",
+"pick": true
+},
+{
+"id": "1248788",
+"day": "thu",
+"start": "11:00",
+"end": "11:30",
+"title": "1000 Clusters, 1 Smarter Brain: The Next Evolution of AIOps at Salesforce",
+"loc": "Hyatt Regency, Level 2, Salt Lake Ballroom DE",
+"why": "1000 clusters at Salesforce. Overlaps your OCM kiosk, so read the slides.",
+"track": "Fleet scale",
+"pick": false
+},
+{
+"id": "1248779",
+"day": "thu",
+"start": "11:50",
+"end": "12:20",
+"title": "From Load Balancer Sprawl to Multicluster Service Discovery",
+"loc": "Hyatt Regency, Level 2, Salt Lake Ballroom C",
+"why": "Cross-cluster discovery after failover. Overlaps your OCM kiosk.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1289712",
+"day": "thu",
+"start": "11:50",
+"end": "12:20",
+"title": "SIG-Multicluster Intro and Deep Dive",
+"loc": "Salt Palace, Level 2, 251 D-F",
+"why": "SIG-Multicluster. Starts 5 min before your OCM kiosk ends and runs into your 12:15 arrival.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1249027",
+"day": "thu",
+"start": "13:50",
+"end": "14:20",
+"title": "Beyond Stateless vs Stateful: A Unified Workload API for Multi-Cluster Kubernetes",
+"loc": "Salt Palace, Level 1, Grand Ballroom GI",
+"why": "Unified workload API for multi-cluster. Overlaps the last 10 min of your kiosk.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1289726",
+"day": "thu",
+"start": "14:40",
+"end": "15:10",
+"title": "Kubernetes Data Protection WG Intro & Deep Dive",
+"loc": "Salt Palace, Level 2, 250 A-C",
+"why": "DR and backup standards. After your KubeVela shift.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1289722",
+"day": "thu",
+"start": "15:30",
+"end": "16:00",
+"title": "Longhorn: Intro, Deep Dive and Q&A",
+"loc": "Salt Palace, Level 2, 250 D-F",
+"why": "Storage replication deep dive.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1375121",
+"day": "thu",
+"start": "15:30",
+"end": "16:00",
+"title": "The CNCF Platform Engineering User Group & Platform Factors",
+"loc": "Salt Palace, Level 2, 254",
+"why": "The schedule text mentions Open Cluster Management.",
+"track": "Multicluster",
+"pick": false
+}
+];
+const CAT=Object.fromEntries(C.map(s=>[s.id,s]));
+const PICKS=new Set(C.filter(s=>s.pick).map(s=>s.id));
+const LINK=id=>"https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/program/schedule/?id="+id;

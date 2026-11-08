@@ -1,0 +1,705 @@
+<title>KubeCon Planner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: day tabs on top; left column is the day's timeline, right column is the session browser. */
+:root{
+  --bg:#f4f6f9; --surface:#ffffff; --ink:#18212d; --muted:#586374; --line:#dbe1e9; --soft:#eaeef4;
+  --accent:#2a5bd7; --accent-ink:#ffffff;
+  --booth:#0b7a69; --talk:#7b3fb5; --session:#2a5bd7; --meet:#a85a00; --other:#586374;
+  --warn:#b3261e; --warn-bg:#fdecea; --ok:#1b7a43;
+  --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12171f; --surface:#1a212b; --ink:#e8edf4; --muted:#9aa5b5; --line:#2b3441; --soft:#232c38;
+  --accent:#7aa2ff; --accent-ink:#0d1420;
+  --booth:#3fc4ad; --talk:#c39bf0; --session:#7aa2ff; --meet:#f0b160; --other:#9aa5b5;
+  --warn:#ff8a80; --warn-bg:#3a1f1d; --ok:#6fd49a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171f; --surface:#1a212b; --ink:#e8edf4; --muted:#9aa5b5; --line:#2b3441; --soft:#232c38;
+  --accent:#7aa2ff; --accent-ink:#0d1420;
+  --booth:#3fc4ad; --talk:#c39bf0; --session:#7aa2ff; --meet:#f0b160; --other:#9aa5b5;
+  --warn:#ff8a80; --warn-bg:#3a1f1d; --ok:#6fd49a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--sans);padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+.wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 24px}
+h1{font-size:26px;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0}
+.status{font:12px var(--mono);color:var(--muted);padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);white-space:nowrap}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px}
+.tab{flex:1 0 96px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--ink);font:inherit;cursor:pointer}
+.tab b{display:block;font-size:15px}
+.tab span{display:block;font:12px var(--mono);color:var(--muted);margin-top:2px}
+.tab[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.tab .bad{color:var(--warn)}
+.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:start}
+@media(max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px;font-weight:600}
+.stack{display:flex;flex-direction:column;gap:10px;min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px}
+.card.conflict{border-color:var(--warn)}
+.time{font:600 13px var(--mono);white-space:nowrap;padding-top:2px}
+.time small{display:block;font-weight:400;color:var(--muted)}
+.title{font-weight:600;margin:0;overflow-wrap:anywhere}
+.loc{color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.note{color:var(--muted);font-size:13px;margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.k-booth{color:var(--booth)}.k-talk{color:var(--talk)}.k-session{color:var(--session)}.k-meet{color:var(--meet)}.k-other{color:var(--other)}
+.chip.confirm{color:var(--meet)}
+.clash{margin-top:6px;font-size:13px;color:var(--warn);background:var(--warn-bg);border-radius:6px;padding:4px 8px}
+.actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+button,.btn{font:inherit;font-size:13px;font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+a.btn{display:inline-block;text-decoration:none}
+a.btn:hover{border-color:var(--accent)}
+.lnk{display:inline-block;margin-top:4px;font-size:13px;font-weight:600;color:var(--accent)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+button.danger{color:var(--warn)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:18px;color:var(--muted);text-align:center}
+label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
+input,select,textarea{font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 9px;min-width:0;width:100%}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.form{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.editrow{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.pill{border-radius:999px;padding:4px 11px;font-size:12px}
+.pill[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.s-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.s-item:first-child{border-top:0}
+.s-item.added .title{color:var(--muted)}
+.tabular{font-variant-numeric:tabular-nums}
+.btncol{display:flex;flex-direction:column;gap:6px}
+.card.seen .title{color:var(--muted);text-decoration:line-through}
+.chk{flex-direction:row;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink)}
+.chk input{width:auto}
+textarea{resize:vertical;margin-top:8px}
+.leave{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.trip{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.trip summary{cursor:pointer;font-weight:600}
+.trip p{margin:10px 0}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+const DAYS=[{k:"sun",n:"Sun",d:8},{k:"mon",n:"Mon",d:9},{k:"tue",n:"Tue",d:10},{k:"wed",n:"Wed",d:11},{k:"thu",n:"Thu",d:12},{k:"fri",n:"Fri",d:13}];
+const KINDS={booth:"Booth shift",talk:"My talk",session:"Session",meet:"Meeting",other:"Other"};
+const TRACKS=["Multicluster","Fleet scale","DR","GitOps"];
+
+const C=[
+{
+"id": "1289834",
+"day": "mon",
+"start": "10:15",
+"end": "10:20",
+"title": "Cloud Native MySQL",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Stateful database DR background.",
+"track": "DR",
+"pick": false
+},
+{
+"id": "1289875",
+"day": "mon",
+"start": "11:31",
+"end": "11:36",
+"title": "LitmusChaos 2026: What’s New & What’s Next",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Chaos testing for failover. Same room as your talk.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1289881",
+"day": "mon",
+"start": "11:59",
+"end": "12:04",
+"title": "k8gb Is Growing up: Incubating Global Load Balancing for Kubernetes",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Cross-cluster traffic failover, right before your talk.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1289885",
+"day": "mon",
+"start": "12:13",
+"end": "12:18",
+"title": "Multi-Cluster Orchestration System: Karmada Updates and Use Cases",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Placement and failover, two minutes after your talk. Stay in the room.",
+"track": "Multicluster",
+"pick": true
+},
+{
+"id": "1289909",
+"day": "mon",
+"start": "15:24",
+"end": "15:29",
+"title": "Longhorn: The 2026 Wrap-up Edition",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Storage replication.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1289913",
+"day": "mon",
+"start": "15:45",
+"end": "15:50",
+"title": "Velero: Faster Backups, Consistent Snapshots, Incremental Everything",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom B-D",
+"why": "Backup and restore.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1250350",
+"day": "tue",
+"start": "11:30",
+"end": "12:00",
+"title": "Saturated by Design – Maximizing Cluster Allocation in On-Premises Kubernetes",
+"loc": "Salt Palace, Level 1, Grand Ballroom ACE",
+"why": "Cluster allocation and utilization.",
+"track": "Fleet scale",
+"pick": false
+},
+{
+"id": "1334788",
+"day": "tue",
+"start": "12:17",
+"end": "12:29",
+"title": "Cluster API in 15 Minutes. A Primer on Declarative Kubernetes Infrastructure",
+"loc": "Salt Palace, Level 1, Solutions Showcase, Halls 5, Cosmic Canyon Zone",
+"why": "Cluster lifecycle as an API, in the Showcase hall next to the kiosks.",
+"track": "Fleet scale",
+"pick": true
+},
+{
+"id": "1223002",
+"day": "tue",
+"start": "14:50",
+"end": "15:20",
+"title": "You Don’t Have to Choose: Argo and Flux Are Friends!",
+"loc": "Salt Palace, Level 2, 255 BC",
+"why": "GitOps at fleet scale.",
+"track": "GitOps",
+"pick": true
+},
+{
+"id": "1247848",
+"day": "tue",
+"start": "15:40",
+"end": "16:10",
+"title": "N Clusters, One kubectl: Multi-Cluster That Just Works",
+"loc": "Hyatt Regency, Level 2, Salt Lake Ballroom C",
+"why": "Meet the speakers. A kubectl proxy over a hub-managed fleet. Ask what ports to OCM.",
+"track": "Multicluster",
+"pick": true
+},
+{
+"id": "1243723",
+"day": "tue",
+"start": "16:40",
+"end": "17:10",
+"title": "Multicluster AMA: The Community Answers",
+"loc": "Hyatt Regency, Level 2, Salt Lake Ballroom C",
+"why": "AMA with August Simonelli (OCM) and Laura Lorenz (SIG-Multicluster).",
+"track": "Multicluster",
+"pick": true
+},
+{
+"id": "1250559",
+"day": "tue",
+"start": "17:30",
+"end": "18:00",
+"title": "GitOps Meltdown: How a Commit Triggered a Cascading Delete of 39 Clusters in Production",
+"loc": "Salt Palace, Level 2, 255 BC",
+"why": "Blast radius of a GitOps prune across 39 clusters.",
+"track": "Fleet scale",
+"pick": true
+},
+{
+"id": "1289629",
+"day": "tue",
+"start": "17:30",
+"end": "18:00",
+"title": "TAG Operational Resilience: Shaping the Future Through Initiatives",
+"loc": "Salt Palace, Level 2, 254",
+"why": "DR community contacts. Overlaps GitOps Meltdown.",
+"track": "DR",
+"pick": false
+},
+{
+"id": "1360829",
+"day": "wed",
+"start": "10:11",
+"end": "10:16",
+"title": "We Have GitOps at Home: How Meta Went from Terraform on Cron to GitOps for AI Infra",
+"loc": "Salt Palace, Level 1, Hall DE",
+"why": "Fleet GitOps in 5 minutes, same area as the 11:50 session.",
+"track": "GitOps",
+"pick": true
+},
+{
+"id": "1247840",
+"day": "wed",
+"start": "11:50",
+"end": "12:20",
+"title": "Ship Faster, Ship Safer: A K8s-Native Canary Pipeline for Critical Cluster Services",
+"loc": "Salt Palace, Level 1, Grand Ballroom BDF",
+"why": "Safe rollout across clusters.",
+"track": "Fleet scale",
+"pick": true
+},
+{
+"id": "1289700",
+"day": "wed",
+"start": "11:50",
+"end": "12:20",
+"title": "From Cloud Outages to AI Security Challenges: Building Resilient DNS Infrastructure at Scale",
+"loc": "Salt Palace, Level 2, 250 A-C",
+"why": "Outage resilience. Overlaps Ship Faster.",
+"track": "DR",
+"pick": false
+},
+{
+"id": "1247641",
+"day": "wed",
+"start": "14:55",
+"end": "15:00",
+"title": "5,000 Nodes in Minutes, Twice in a Week: A Pattern for Fleet-Wide Node Changes",
+"loc": "Hyatt Regency, Level 4, Regency Ballroom CD",
+"why": "Fixing 5,000+ nodes in minutes (5 min), in the Hyatt. Leave by 3:05 to reach the kiosk by 3:20.",
+"track": "Fleet scale",
+"pick": true
+},
+{
+"id": "1229970",
+"day": "wed",
+"start": "15:10",
+"end": "15:40",
+"title": "No RAG, No Regrets: Letting an LLM Drive 30 EKS Clusters in Production",
+"loc": "Salt Palace, Level 1, Grand Ballroom GI",
+"why": "An LLM driving 30 EKS clusters. Overlaps your kiosk arrival.",
+"track": "Fleet scale",
+"pick": false
+},
+{
+"id": "1249894",
+"day": "wed",
+"start": "15:10",
+"end": "15:40",
+"title": "Many Clusters, One GPU Pool: Locality-Aware Scheduling and Data Delivery With Kueue and Dragonfly",
+"loc": "Salt Palace, Level 1, Grand Ballroom BDF",
+"why": "Placement across clusters for one GPU pool. Overlaps your kiosk shift.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1336101",
+"day": "wed",
+"start": "15:55",
+"end": "16:10",
+"title": "Breaking the O(n²) Wall: Pub/Sub Federation for Istio Multicluster Service Discovery",
+"loc": "Salt Palace, Level 1, Solutions Showcase, Halls 5, Cosmic Canyon Zone",
+"why": "Istio multicluster discovery. Overlaps your kiosk shift.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1289702",
+"day": "wed",
+"start": "16:10",
+"end": "16:40",
+"title": "Multi-Cluster Orchestration System: Karmada Updates and Use Cases",
+"loc": "Salt Palace, Level 2, 251 A-C",
+"why": "Karmada, full session. Overlaps your kiosk shift.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1362689",
+"day": "wed",
+"start": "16:25",
+"end": "16:45",
+"title": "Demo Theater: Day 2 for Stateful Kubernetes: Data Services You Can See",
+"loc": "Salt Palace, Level 1, Solutions Showcase, Hall 1, Alpine Overlook Zone, Demo Theater",
+"why": "Day 2 stateful data services demo. Overlaps your kiosk shift.",
+"track": "DR",
+"pick": false
+},
+{
+"id": "1293929",
+"day": "thu",
+"start": "09:39",
+"end": "09:44",
+"title": "Standardized Yet Adaptable: How Nutanix is Evolving Cluster API with CAREN",
+"loc": "Salt Palace, Level 1, Hall DE",
+"why": "Cluster API in 5 minutes, just before your OCM kiosk.",
+"track": "Fleet scale",
+"pick": true
+},
+{
+"id": "1248788",
+"day": "thu",
+"start": "11:00",
+"end": "11:30",
+"title": "1000 Clusters, 1 Smarter Brain: The Next Evolution of AIOps at Salesforce",
+"loc": "Hyatt Regency, Level 2, Salt Lake Ballroom DE",
+"why": "1000 clusters at Salesforce. Overlaps your OCM kiosk, so read the slides.",
+"track": "Fleet scale",
+"pick": false
+},
+{
+"id": "1248779",
+"day": "thu",
+"start": "11:50",
+"end": "12:20",
+"title": "From Load Balancer Sprawl to Multicluster Service Discovery",
+"loc": "Hyatt Regency, Level 2, Salt Lake Ballroom C",
+"why": "Cross-cluster discovery after failover. Overlaps your OCM kiosk.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1289712",
+"day": "thu",
+"start": "11:50",
+"end": "12:20",
+"title": "SIG-Multicluster Intro and Deep Dive",
+"loc": "Salt Palace, Level 2, 251 D-F",
+"why": "SIG-Multicluster. Starts 5 min before your OCM kiosk ends and runs into your 12:15 arrival.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1249027",
+"day": "thu",
+"start": "13:50",
+"end": "14:20",
+"title": "Beyond Stateless vs Stateful: A Unified Workload API for Multi-Cluster Kubernetes",
+"loc": "Salt Palace, Level 1, Grand Ballroom GI",
+"why": "Unified workload API for multi-cluster. Overlaps the last 10 min of your kiosk.",
+"track": "Multicluster",
+"pick": false
+},
+{
+"id": "1289726",
+"day": "thu",
+"start": "14:40",
+"end": "15:10",
+"title": "Kubernetes Data Protection WG Intro & Deep Dive",
+"loc": "Salt Palace, Level 2, 250 A-C",
+"why": "DR and backup standards. After your KubeVela shift.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1289722",
+"day": "thu",
+"start": "15:30",
+"end": "16:00",
+"title": "Longhorn: Intro, Deep Dive and Q&A",
+"loc": "Salt Palace, Level 2, 250 D-F",
+"why": "Storage replication deep dive.",
+"track": "DR",
+"pick": true
+},
+{
+"id": "1375121",
+"day": "thu",
+"start": "15:30",
+"end": "16:00",
+"title": "The CNCF Platform Engineering User Group & Platform Factors",
+"loc": "Salt Palace, Level 2, 254",
+"why": "The schedule text mentions Open Cluster Management.",
+"track": "Multicluster",
+"pick": false
+}
+];
+const CAT=Object.fromEntries(C.map(s=>[s.id,s]));
+const PICKS=new Set(C.filter(s=>s.pick).map(s=>s.id));
+const LINK=id=>"https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/program/schedule/?id="+id;
+
+/* Your commitments. The kiosk shifts follow the sign-up sheet you pasted. The talk and the OCM kiosk do not change. */
+const DEFAULT_ITEMS=[
+{id:"badge",kind:"other",day:"mon",start:"07:00",end:"08:00",title:"Badge pickup (Registration)",loc:"Salt Palace, 200 South Entrance (South)",note:"Registration is open 7:00 AM to 5:00 PM on Monday. Go early to beat the queue. Your talk check-in is at 11:51.",url:LINK("1289947")},
+{id:"fluxcon",kind:"session",day:"mon",start:"09:00",end:"11:15",title:"FluxCon (first part only)",loc:"Salt Palace, Level 1, Grand Ballroom H",note:"The half-day event runs to 12:25 and needs your All Access pass. Leave by 11:15. The Hyatt is connected to the Salt Palace, so you are in your talk room by about 11:20, over 30 minutes before your 11:51 check-in.",url:LINK("1289762")},
+{id:"talk",kind:"talk",day:"mon",start:"12:06",end:"12:11",title:"My lightning talk: Hub → Managed Cluster: How Long Did the Workload Take? Did It Arrive?",loc:"Hyatt Regency, Level 4, Regency Ballroom B-D",note:"Be in the room by 11:51. Check in at the Speaker Check-In desk at the back.",url:LINK("1289883")},
+{id:"kiosk-ocm",kind:"booth",day:"thu",start:"10:15",end:"11:55",title:"OCM kiosk shift",loc:"Project Pavilion, Salt Palace, Level 1, Solutions Showcase, Hall 5",note:"One-time Thursday morning slot offered by the CNCF events team.",url:LINK("1373668")},
+{id:"kiosk-vela-wed",kind:"booth",day:"wed",start:"15:30",end:"17:00",title:"KubeVela kiosk shift",loc:"Kiosk P-3A, Salt Palace, Level 1, Solutions Showcase, Hall 5",note:"Arrive by 3:20 PM, 10 minutes early. The 1:25 to 1:55 PM transition is for the earlier shift.",url:LINK("1373667")},
+{id:"kiosk-vela-thu",kind:"booth",day:"thu",start:"12:25",end:"14:00",title:"KubeVela kiosk shift",loc:"Kiosk P-3A, Salt Palace, Level 1, Solutions Showcase, Hall 5",note:"Arrive by 12:15 PM. The OCM kiosk next to it ends at 11:55 in the same hall.",confirm:true,url:LINK("1373669")}
+];
+const DEFAULT_ATTEND=[...PICKS];
+/* Trip: default travel times are estimates. Change them in the Trip panel. */
+const DEFAULT_TRIP={commute:25,airport:30,airBuffer:120};
+const HOTEL="Your hotel";
+const TRAVEL_FAR=5, TRAVEL_NEAR=10; /* minutes. Estimates, not measured walks. The Hyatt Regency is connected to the Salt Palace (listings give about a 1 minute walk), so the far figure is small. */
+const venue=loc=>/^HR\b|Hyatt/i.test(loc||"")?"Hyatt Regency":/Salt Palace|^SP\b|Solutions Showcase|Project Pavilion|kiosk/i.test(loc||"")?"Salt Palace":"";
+const zone=loc=>{
+  loc=loc||"";
+  if(/^HR\b|Hyatt/i.test(loc))return"Hyatt Regency";
+  if(/Solutions Showcase|Hall 5|Project Pavilion|kiosk/i.test(loc))return"Salt Palace Level 1 Showcase hall";
+  if(/Level 2|\bL2\b/i.test(loc))return"Salt Palace Level 2 rooms";
+  if(/Salt Palace|^SP\b|Level 1|Grand Ballroom|Hall DE/i.test(loc))return"Salt Palace Level 1 ballrooms";
+  return"";
+};
+function travelWarn(list){
+  const m=new Map();
+  for(let i=1;i<list.length;i++){
+    const a=list[i-1],b=list[i],za=zone(a.loc),zb=zone(b.loc);
+    if(za&&zb&&za!==zb){
+      const far=venue(a.loc)!==venue(b.loc),need=far?TRAVEL_FAR:TRAVEL_NEAR,gap=mins(b.start)-mins(a.end);
+      if(gap>=0&&gap<need)m.set(b.id,"Only "+gap+" min after \""+short(a.title)+"\" ("+za+"). This one is in "+zb+". Allow about "+need+" min.");
+    }
+  }
+  return m;
+}
+
+
+const KEY="kubecon-planner-v3";
+let S={items:structuredClone(DEFAULT_ITEMS),attend:[...DEFAULT_ATTEND],trip:{...DEFAULT_TRIP},later:[],seen:[],vnote:{}};
+let UI={day:"mon",q:"",track:"All",hideAdded:false,picks:false,editing:null,adding:false,status:"Saved on this device",ref:null};
+
+const $=s=>document.querySelector(s);
+const h=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const mins=t=>{const [a,b]=t.split(":").map(Number);return a*60+b};
+const fmt=t=>{if(!t)return"";let [a,b]=t.split(":").map(Number);const p=a>=12?"PM":"AM";a=a%12||12;return a+":"+String(b).padStart(2,"0")+" "+p};
+const toHHMM=m=>String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+
+function entries(day){
+  const out=S.items.filter(i=>i.day===day).map(i=>({...i,src:"item"}));
+  for(const id of S.attend){const s=CAT[id];if(s&&s.day===day){out.push({id:s.id,kind:"session",day,start:s.start,end:s.end,est:false,title:s.title,loc:s.loc,note:s.why,url:LINK(s.id),src:"cat"})}}
+  out.sort((a,b)=>mins(a.start)-mins(b.start)||mins(a.end)-mins(b.end));
+  return out;
+}
+function clashes(list){
+  const m=new Map();
+  for(let i=0;i<list.length;i++)for(let j=i+1;j<list.length;j++){
+    const a=list[i],b=list[j];
+    if(mins(a.start)<mins(b.end)&&mins(b.start)<mins(a.end)){
+      (m.get(a.id)||m.set(a.id,[]).get(a.id)).push(b.title);
+      (m.get(b.id)||m.set(b.id,[]).get(b.id)).push(a.title);
+    }
+  }
+  return m;
+}
+const short=t=>t.length>60?t.slice(0,57)+"…":t;
+
+function dayTab(d){
+  const l=entries(d.k),c=clashes(l);
+  return `<button class="tab" role="tab" data-act="day" data-v="${d.k}" aria-selected="${UI.day===d.k}"><b>${d.n} Nov ${d.d}</b><span>${l.length} planned${c.size?` · <span class="bad">${c.size} overlapping</span>`:""}</span></button>`;
+}
+function itemCard(e,clash,trip){
+  if(UI.editing===e.id&&e.src==="item")return editCard(e);
+  const k=e.kind;
+  return `<article class="card${clash?" conflict":""}">
+    <div class="time tabular">${fmt(e.start)}<small>to ${e.est?"~":""}${fmt(e.end)}</small></div>
+    <div style="min-width:0"><p class="title">${h(e.title)}</p>
+    ${e.loc?`<div class="loc">${h(e.loc)}</div>`:""}
+    ${e.note?`<div class="note">${h(e.note)}</div>`:""}
+    <div class="chips"><span class="chip k-${k}">${KINDS[k]||"Other"}</span>${venue(e.loc)?`<span class="chip k-other">${venue(e.loc)}</span>`:""}${e.src==="cat"&&PICKS.has(e.id)?`<span class="chip k-meet">Suggested</span>`:""}${e.confirm?`<span class="chip confirm">Confirm</span>`:""}</div>
+    ${clash?`<div class="clash">Overlaps with ${clash.map(t=>h(short(t))).join("; ")}</div>`:""}
+    ${trip?`<div class="clash">${h(trip)}</div>`:""}
+    <div class="actions">${e.url?`<a class="btn" href="${h(e.url)}" target="_blank" rel="noopener">Open session ↗</a>`:""}<a class="btn" href="${h(gcal(e))}" target="_blank" rel="noopener">Add to Google Calendar ↗</a>${e.src==="item"?`<button data-act="edit" data-v="${h(e.id)}">Edit</button><button class="danger" data-act="del" data-v="${h(e.id)}">Remove</button>`:`<button class="danger" data-act="unattend" data-v="${h(e.id)}">Remove from plan</button>`}</div></div></article>`;
+}
+function fields(v,p){
+  const dayOpts=DAYS.map(d=>`<option value="${d.k}"${v.day===d.k?" selected":""}>${d.n} Nov ${d.d}</option>`).join("");
+  const kindOpts=Object.entries(KINDS).filter(([k])=>k!=="session").map(([k,n])=>`<option value="${k}"${v.kind===k?" selected":""}>${n}</option>`).join("");
+  return `<label>What<input id="${p}-title" value="${h(v.title)}" placeholder="e.g. KubeVela kiosk shift"></label>
+    <div class="grid2">
+      <label>Type<select id="${p}-kind">${kindOpts}</select></label>
+      <label>Day<select id="${p}-day">${dayOpts}</select></label>
+      <label>Starts (MST)<input id="${p}-start" type="time" value="${h(v.start)}"></label>
+      <label>Ends (MST)<input id="${p}-end" type="time" value="${h(v.end)}"></label>
+    </div>
+    <label>Location<input id="${p}-loc" value="${h(v.loc)}" placeholder="Hall, room or kiosk"></label>
+    <label>Notes<input id="${p}-note" value="${h(v.note)}" placeholder="Optional"></label>`;
+}
+function editCard(e){
+  return `<article class="card"><div class="editrow" style="margin:0">${fields(e,"e")}
+    <div class="actions"><button class="primary" data-act="saveedit" data-v="${h(e.id)}">Save</button><button data-act="canceledit">Cancel</button></div></div></article>`;
+}
+function readFields(p){
+  const g=id=>$("#"+p+"-"+id).value;
+  return {title:g("title").trim(),kind:g("kind"),day:g("day"),start:g("start"),end:g("end"),loc:g("loc").trim(),note:g("note").trim()};
+}
+function validate(v){
+  if(!v.title)return"Add a title.";
+  if(!v.start||!v.end)return"Set a start and end time.";
+  if(mins(v.end)<=mins(v.start))return"End time must be after the start time.";
+  return"";
+}
+function addForm(){
+  const blank={title:"",kind:"booth",day:UI.day,start:"10:00",end:"11:00",loc:"",note:""};
+  return `<div class="form">${fields(blank,"n")}<div id="n-err" class="clash" hidden></div>
+    <div class="actions"><button class="primary" data-act="saveadd">Add to ${DAYS.find(d=>d.k===UI.day).n} plan</button><button data-act="canceladd">Cancel</button></div></div>`;
+}
+function browser(){
+  const q=UI.q.trim().toLowerCase();
+  const list=C.filter(s=>s.day===UI.day&&(UI.track==="All"||s.track===UI.track)&&(!q||(s.title+" "+s.loc+" "+s.why).toLowerCase().includes(q))&&(!UI.hideAdded||!S.attend.includes(s.id))&&(!UI.picks||PICKS.has(s.id)));
+  const rows=list.map(s=>{const on=S.attend.includes(s.id);return `<div class="s-item${on?" added":""}">
+    <div class="time tabular">${fmt(s.start)}<small>${mins(s.end)-mins(s.start)} min</small></div>
+    <div style="min-width:0"><p class="title">${h(s.title)}</p><div class="loc">${h(s.loc)}${venue(s.loc)?" · "+venue(s.loc):""}</div><div class="note">${h(s.why)} · ${s.track}${PICKS.has(s.id)?" · <b class=\"k-meet\">Suggested</b>":""}</div><a class="lnk" href="${LINK(s.id)}" target="_blank" rel="noopener">Open session ↗</a></div>
+    <div class="btncol"><button data-act="${on?"unattend":"attend"}" data-v="${s.id}" class="${on?"":"primary"}" aria-pressed="${on}">${on?"Added":"Add"}</button><button data-act="later" data-v="${s.id}" aria-pressed="${(S.later||[]).includes(s.id)}">${(S.later||[]).includes(s.id)?"On video list":"Video later"}</button></div></div>`}).join("");
+  return `<h2>Sessions to add</h2>
+  <label for="q" style="margin-bottom:8px">Search<input id="q" type="search" value="${h(UI.q)}" placeholder="Title, room or topic"></label>
+  <div class="filters">${["All",...TRACKS].map(t=>`<button class="pill" data-act="track" data-v="${t}" aria-pressed="${UI.track===t}">${t}</button>`).join("")}<button class="pill" data-act="picks" aria-pressed="${UI.picks}">Suggested only</button><button class="pill" data-act="hide" aria-pressed="${UI.hideAdded}">Hide added</button></div>
+  <div>${rows||`<div class="empty">No sessions match on this day. Clear the search or pick another track.</div>`}</div>`;
+}
+
+const GDATE={sun:"20261108",mon:"20261109",tue:"20261110",wed:"20261111",thu:"20261112",fri:"20261113"};
+function gcal(e){
+  const t=x=>GDATE[e.day]+"T"+x.replace(":","")+"00";
+  const details=[e.note,e.url?"Details: "+e.url:""].filter(Boolean).join("\n");
+  return "https://calendar.google.com/calendar/render?action=TEMPLATE"
+    +"&text="+encodeURIComponent((e.kind==="booth"?"[Booth] ":e.kind==="talk"?"[My talk] ":"")+e.title)
+    +"&dates="+t(e.start)+"/"+t(e.end)
+    +"&ctz=America%2FDenver"
+    +"&location="+encodeURIComponent(e.loc||"")
+    +"&details="+encodeURIComponent(details);
+}
+const toggle=(a,v)=>a.includes(v)?a.filter(x=>x!==v):[...a,v];
+function videoIds(){
+  const order={sun:0,mon:1,tue:2,wed:3,thu:4,fri:5};
+  const ids=[...new Set([...S.attend.filter(i=>CAT[i]),...(S.later||[]).filter(i=>CAT[i])])];
+  return ids.sort((a,b)=>order[CAT[a].day]-order[CAT[b].day]||mins(CAT[a].start)-mins(CAT[b].start));
+}
+function videoTab(){
+  const ids=videoIds(),left=ids.filter(i=>!(S.seen||[]).includes(i)).length;
+  return `<button class="tab" role="tab" data-act="day" data-v="videos" aria-selected="${UI.day==="videos"}"><b>Videos</b><span>${left} to watch</span></button>`;
+}
+function videosView(){
+  const ids=videoIds(),left=ids.filter(i=>!(S.seen||[]).includes(i)).length;
+  const rows=ids.map(id=>{
+    const s=CAT[id],seen=(S.seen||[]).includes(id),note=(S.vnote||{})[id]||"";
+    const q="https://www.youtube.com/results?search_query="+encodeURIComponent("KubeCon NA 2026 "+s.title);
+    return `<article class="card${seen?" seen":""}"><div class="time tabular">${DAYS.find(d=>d.k===s.day).n}<small>${fmt(s.start)}</small></div>
+      <div style="min-width:0"><p class="title">${h(s.title)}</p><div class="loc">${h(s.loc)}</div>
+      <div class="actions"><a class="btn" href="${q}" target="_blank" rel="noopener">Find the video ↗</a><a class="btn" href="${LINK(id)}" target="_blank" rel="noopener">Session page ↗</a>
+      <label class="chk"><input type="checkbox" data-act="seen" data-v="${id}"${seen?" checked":""}> Watched</label>
+      ${S.attend.includes(id)?"":`<button class="danger" data-act="later" data-v="${id}">Remove</button>`}</div>
+      <textarea data-vnote="${id}" rows="2" aria-label="Notes for ${h(s.title)}" placeholder="Notes to take back to the team">${h(note)}</textarea></div></article>`;
+  }).join("");
+  return `<section class="stack" style="grid-column:1/-1"><h2>Videos to review later: ${left} left of ${ids.length}</h2>
+    <p class="note">Sessions in your plan show up here on their own. Add others with "Video later" in the session list. Recordings usually appear on the CNCF YouTube channel after the event. I don't have the video links yet, so "Find the video" opens a YouTube search for the session title.</p>
+    ${rows||`<div class="empty">No sessions yet. Add some to your plan, or use "Video later" on a session.</div>`}</section>`;
+}
+function render(){
+  const focus=document.activeElement&&document.activeElement.id==="q";
+  const day=DAYS.find(d=>d.k===UI.day)||DAYS[1],l=entries(UI.day),cl=clashes(l),tr=travelWarn(l);
+  $("#app").innerHTML=`
+  <header><div><h1>KubeCon NA 2026 Planner</h1><p class="sub">Salt Lake City, Nov 8 to 12. All times MST. The Hyatt is connected to the Salt Palace, so that walk is short. Back-to-back sessions in different parts of the Salt Palace get a warning. The walking times are estimates.</p></div><span class="status" id="status">${h(UI.status)}</span></header>
+  <details class="trip"><summary>Trip: hotel, flights and travel times</summary>
+    <p>Set your own travel times below. The leave-by line on each day uses them.</p>
+    <div class="grid2">
+      <label>Hotel to the Salt Palace or Hyatt (min, door to door)<input id="t-commute" type="number" min="5" max="90" value="${S.trip.commute}"></label>
+      <label>Hotel to the airport (min)<input id="t-airport" type="number" min="5" max="90" value="${S.trip.airport}"></label>
+      <label>Time at the airport before departure (min)<input id="t-airbuf" type="number" min="30" max="240" value="${S.trip.airBuffer}"></label>
+    </div>
+    <p class="note">These are estimates. Check a map or a rideshare quote for your hotel and change the numbers.</p></details>
+  <div class="tabs" role="tablist">${DAYS.map(dayTab).join("")}${videoTab()}</div>
+  <div class="cols">
+    <section class="stack"><h2>${day.n} Nov ${day.d}: your plan</h2>
+      ${(()=>{const lb=leaveBy(UI.day);return lb?`<div class="leave">Leave the hotel by <b class="tabular">${fmt(lb.time)}</b> ${h(lb.why)}.</div>`:""})()}
+      ${l.length?l.map(e=>itemCard(e,cl.get(e.id),tr.get(e.id))).join(""):`<div class="empty">Nothing planned for this day. Add a booth shift or event below, or pick sessions on the right.</div>`}
+      ${UI.adding?addForm():`<button data-act="add" style="align-self:flex-start">+ Add booth shift, talk or event</button>`}
+      <div class="actions"><button data-act="reset">Reset to the planner defaults</button></div>
+    </section>
+    <section id="browser">${browser()}</section>
+  </div>`;
+  if(UI.day==="videos"){const c=document.querySelector(".cols");if(c)c.outerHTML=videosView()}
+  if(focus){const q=$("#q");q.focus();q.setSelectionRange(q.value.length,q.value.length)}
+}
+function renderBrowser(){
+  const el=$("#browser");if(!el)return render();
+  el.innerHTML=browser();
+  const q=$("#q");q.focus();q.setSelectionRange(q.value.length,q.value.length);
+}
+
+function setStatus(t){UI.status=t;const s=$("#status");if(s)s.textContent=t}
+let timer;
+function leaveBy(day){
+  const t=S.trip||DEFAULT_TRIP,l=entries(day);
+  const fl=l.find(e=>e.id==="flight-back");
+  if(fl)return{time:toHHMM(mins(fl.start)-t.airBuffer-t.airport),why:"for the "+fmt(fl.start)+" flight: "+t.airBuffer+" min at the airport plus "+t.airport+" min to get there"};
+  const first=l.find(e=>venue(e.loc));
+  if(!first)return null;
+  const lead=first.kind==="talk"?15:first.kind==="booth"?10:5;
+  return{time:toHHMM(mins(first.start)-lead-t.commute),why:"to be at \""+short(first.title)+"\" "+lead+" min before "+fmt(first.start)+", with "+t.commute+" min to get there"};
+}
+function persist(){
+  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+  clearTimeout(timer);
+  if(!UI.ref){setStatus("Saved on this device");return}
+  setStatus("Saving…");
+  timer=setTimeout(async()=>{try{await UI.ref.set(JSON.parse(JSON.stringify({...S,v:1})));setStatus("Saved to your account")}catch(e){setStatus("Saved on this device only")}},500);
+}
+function change(fn){fn();persist();render()}
+
+document.addEventListener("click",ev=>{
+  const b=ev.target.closest("[data-act]");if(!b)return;
+  const a=b.dataset.act,v=b.dataset.v;
+  if(a==="day")return change(()=>{UI.day=v;UI.editing=null;UI.adding=false});
+  if(a==="track"){UI.track=v;return render()}
+  if(a==="hide"){UI.hideAdded=!UI.hideAdded;return render()}
+  if(a==="picks"){UI.picks=!UI.picks;return render()}
+  if(a==="later")return change(()=>{S.later=toggle(S.later||[],v)});
+  if(a==="seen")return change(()=>{S.seen=toggle(S.seen||[],v)});
+  if(a==="attend")return change(()=>{if(!S.attend.includes(v))S.attend.push(v)});
+  if(a==="unattend")return change(()=>{S.attend=S.attend.filter(x=>x!==v)});
+  if(a==="del")return change(()=>{S.items=S.items.filter(x=>x.id!==v)});
+  if(a==="edit"){UI.editing=v;return render()}
+  if(a==="canceledit"){UI.editing=null;return render()}
+  if(a==="add"){UI.adding=true;return render()}
+  if(a==="canceladd"){UI.adding=false;return render()}
+  if(a==="saveedit"){const f=readFields("e"),err=validate(f);if(err){alert_(err);return}
+    return change(()=>{const i=S.items.find(x=>x.id===v);Object.assign(i,f,{confirm:false});UI.editing=null})}
+  if(a==="saveadd"){const f=readFields("n"),err=validate(f);if(err){const e=$("#n-err");e.textContent=err;e.hidden=false;return}
+    return change(()=>{S.items.push({id:"i"+Date.now(),...f});UI.day=f.day;UI.adding=false})}
+  if(a==="reset"){if(b.dataset.armed){return change(()=>{S={items:structuredClone(DEFAULT_ITEMS),attend:[...DEFAULT_ATTEND],trip:{...S.trip},later:S.later||[],seen:S.seen||[],vnote:S.vnote||{}};UI.editing=null;UI.adding=false})}
+    b.dataset.armed="1";b.textContent="Click again to discard your changes";b.classList.add("danger")}
+});
+function alert_(msg){const c=document.querySelector(".card .editrow");let e=c.querySelector(".clash");if(!e){e=document.createElement("div");e.className="clash";c.insertBefore(e,c.querySelector(".actions"))}e.textContent=msg}
+document.addEventListener("change",ev=>{
+  if(ev.target.dataset&&ev.target.dataset.vnote){S.vnote={...(S.vnote||{}),[ev.target.dataset.vnote]:ev.target.value};persist();return}
+  const m={"t-commute":"commute","t-airport":"airport","t-airbuf":"airBuffer"}[ev.target.id];
+  if(!m)return;
+  const v=Math.max(0,Math.min(300,parseInt(ev.target.value,10)||0));
+  change(()=>{S.trip={...S.trip,[m]:v}});
+  const d=document.querySelector("details.trip");if(d)d.open=true;
+});
+document.addEventListener("input",ev=>{if(ev.target.id==="q"){UI.q=ev.target.value;renderBrowser()}});
+
+function load(d){
+  if(!(d&&Array.isArray(d.items)&&Array.isArray(d.attend)))return false;
+  const items=d.items.map(x=>x.id==="fluxcon"&&x.end==="10:45"?{...DEFAULT_ITEMS.find(i=>i.id==="fluxcon")}:x.id==="badge"&&x.day==="sun"&&x.start==="08:00"&&x.end==="17:00"?{...DEFAULT_ITEMS.find(i=>i.id==="badge")}:{...x});
+  for(const di of DEFAULT_ITEMS)if(/^fluxcon/.test(di.id)&&!items.some(x=>x.id===di.id))items.push({...di});
+  S={items,attend:[...d.attend],trip:{...DEFAULT_TRIP,...(d.trip||{})},later:d.later||[],seen:d.seen||[],vnote:d.vnote||{}};
+  return true;
+}
+try{const raw=localStorage.getItem(KEY);if(raw)load(JSON.parse(raw))}catch(e){}
+render();
+
+(async()=>{
+  try{
+    const cl=window.claude;if(!cl||!cl.use)return;
+    const [user,db]=await Promise.all([cl.use("user"),cl.use("db")]);
+    if(!user||!db)return;
+    const uid=await user.id();if(!uid)return;
+    const ref=db.collection("data/users/"+uid).doc("kubecon-plan-v3");
+    const snap=await ref.get();
+    UI.ref=ref;
+    if(snap.exists&&load(snap.data())){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}setStatus("Saved to your account");render()}
+    else persist();
+  }catch(e){}
+})();
+</script>
