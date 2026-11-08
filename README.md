@@ -9,6 +9,14 @@ The default plan is one attendee's, built around the OCM lightning talk, two pro
 OCM, large-fleet management and disaster recovery. Edit the entries in `DEFAULT_ITEMS` and `PICKS` in `planner.html`
 to make it yours.
 
+## Live links
+
+| What | Link |
+|---|---|
+| This planner, in the browser | https://suvaanshkumar.github.io/kubecon-na-2026-planner/ |
+| OCM lightning talk slides | https://suvaanshkumar.github.io/Kubecon-na-2026-ocm-lt/deck/ |
+| Slides source | https://github.com/suvaanshkumar/Kubecon-na-2026-ocm-lt |
+
 ## What is in here
 
 | Path | What it is |
